@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "680537757937",
+    "firebase_url": "https://dancing-df2da.firebaseio.com",
+    "project_id": "dancing-df2da",
+    "storage_bucket": "dancing-df2da.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:680537757937:android:f95d02deab77c978",
+        "android_client_info": {
+          "package_name": "com.robot.asus.ZenboDancing"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "680537757937-g99b3b0cm4ptql457ub4icvk4d2svghb.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.robot.asus.ZenboDancing",
+            "certificate_hash": "e45710b5f4642ef4940621abbfa4920c51d13ead"
+          }
+        },
+        {
+          "client_id": "680537757937-ig3egf9p1m9rsf0f1ksb47n37g3cl6ha.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDjbiKkPxwnDGC_mKgLgDSsEoF_lbQVrSg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "680537757937-ig3egf9p1m9rsf0f1ksb47n37g3cl6ha.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
