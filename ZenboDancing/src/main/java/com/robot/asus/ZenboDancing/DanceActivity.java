@@ -193,58 +193,35 @@ public class DanceActivity extends RobotActivity {
     private void manDance() {
         robotAPI.robot.speak("Man");
 
-        //順90
-        robotAPI.motion.moveBody(0f, 0f, -1.57f);
-        //前進
-        robotAPI.motion.moveBody(1f, 0f, 0f);
-        //順90
-        robotAPI.motion.moveBody(0f, 0f, -1.57f);
-        //前進
-        robotAPI.motion.moveBody(0.5f, 0f, 0f);
-        //逆90
-        robotAPI.motion.moveBody(0f, 0f, 1.57f);
-        //後退
-        robotAPI.motion.moveBody(-0.1f, 0f, 0f);
-        Timer timer = new Timer();
-        TimerTask task = new TimerTask() {
-            @Override
-            public void run() {
-
-                manDance2();
-            }
-        };
-        timer.schedule(task, 20000);
+        robotAPI.motion.moveBody(0f,0f,-3.14f);
+        robotAPI.motion.moveBody(1f,0f,0f);
+        robotAPI.motion.moveBody(0f,0f,1.57f);
+        robotAPI.motion.moveBody(-0.1f,0f,0f);
+        robotAPI.utility.playAction(22);
+        robotAPI.motion.moveBody(0f,0f,-3.14f);
+        robotAPI.motion.moveBody(0f,0f,-1.57f);
+        robotAPI.motion.moveBody(1f,0f,0f);
     }
 
-    private void manDance2() {
+    private void manDance2(){
 
         //逆90
-        robotAPI.motion.moveBody(0f, 0f, 1.57f);
+        robotAPI.motion.moveBody(0f,0f,1.57f);
         //前進
-        robotAPI.motion.moveBody(0.5f, 0f, 0f);
+        robotAPI.motion.moveBody(0.5f,0f,0f);
     }
-
-    private void ladyDance() {
+    private void ladyDance(){
 
         // float a = (float)Math.PI;
         robotAPI.robot.speak("Lady");
-        //逆90
-        robotAPI.motion.moveBody(0f, 0f, 1.57f);
-        //前進
-        robotAPI.motion.moveBody(1f, 0f, 0f);
-        //逆90
-        robotAPI.motion.moveBody(0f, 0f, 1.57f);
-        //前進
-        robotAPI.motion.moveBody(0.5f, 0f, 0f);
-        //順90
-        robotAPI.motion.moveBody(0f, 0f, -1.57f);
-        //360
-        robotAPI.motion.moveBody(0f, 0f, 3.13f);
-        robotAPI.motion.moveBody(0f, 0f, 3.13f);
-        //順90
-        robotAPI.motion.moveBody(0f, 0f, -1.57f);
-        //前進
-        robotAPI.motion.moveBody(0.5f, 0f, 0f);
+        robotAPI.motion.moveBody(0f,0f,3.14f);
+        robotAPI.motion.moveBody(1f,0f,0f);
+        robotAPI.motion.moveBody(0f,0f,-1.57f);
+        robotAPI.motion.moveBody(-0.1f,0f,0f);
+        robotAPI.utility.playAction(22);
+        robotAPI.motion.moveBody(0f,0f,3.14f);
+        robotAPI.motion.moveBody(0f,0f,1.57f);
+        robotAPI.motion.moveBody(1f,0f,0f);
     }
 
     /*private void uploadMotion() {
