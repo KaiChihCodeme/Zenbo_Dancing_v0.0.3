@@ -18,6 +18,8 @@ import com.asus.robotframework.API.RobotCmdState;
 import com.asus.robotframework.API.RobotErrorCode;
 import com.asus.robotframework.API.RobotFace;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -40,13 +42,14 @@ public class DanceActivity extends RobotActivity {
     private static String gender;
     private MediaPlayer music_cha = new MediaPlayer();
     final Handler handler = new Handler();
+    final Handler handler2 = new Handler();
     private int motion;
     private int state_man;
     private int state_lady;
-    private static int motion_number = 1; //this zenbo next want to do
-    private static int iCurrentSpeakSerial;
+    private static int motion_number = 0; //this zenbo next want to do
+    private static int iCurrentSpeakSerialNO;
 
-    private static FirebaseFirestore db =FirebaseFirestore.getInstance();
+    private static FirebaseFirestore db = FirebaseFirestore.getInstance();
     private static DocumentReference docRef = db.collection("dancing").document("serial");
     private static Map<String, Object> FirebaseData = new HashMap<>();
 
@@ -64,9 +67,9 @@ public class DanceActivity extends RobotActivity {
         public void onStateChange(int cmd, int serial, RobotErrorCode err_code, RobotCmdState state) {
             super.onStateChange(cmd, serial, err_code, state);
 
-            if (serial == iCurrentSpeakSerial && state != RobotCmdState.ACTIVE) {
+            if (serial == iCurrentSpeakSerialNO && state != RobotCmdState.ACTIVE) {
                 //如果講完話，就傳好了
-                Log.d("RobotDevSample", "command: " + iCurrentSpeakSerial + " SUCCEED");
+                Log.d("RobotDevSample", "command: " + iCurrentSpeakSerialNO + " SUCCEED");
                 uploadOKState();
             }
         }
@@ -119,7 +122,7 @@ public class DanceActivity extends RobotActivity {
         gender = intent.getStringExtra("motion");
         Log.d(TAG, "gender: " + gender);
 
-        start =(TextView) findViewById(R.id.start);
+        start = (TextView) findViewById(R.id.start);
         start.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -129,8 +132,8 @@ public class DanceActivity extends RobotActivity {
                     /** ------------------------------------------------------------------------------------------------ */
                     //motion_number = "1";
                     //docRef.update("motion","1");
-                   // FirebaseData.put("motion", "1"); // upload motion 1
-                   // docRef.set(FirebaseData);
+                    // FirebaseData.put("motion", "1"); // upload motion 1
+                    // docRef.set(FirebaseData);
                     //uploadMotion();
                     commandSameTime();
                     downloadData(); // download both state and motion number
@@ -142,7 +145,7 @@ public class DanceActivity extends RobotActivity {
                     //FirebaseData.put("motion", motion_number); // 上傳motion 2
 
                     music_cha.start();
-                    manDance();
+                    //manDance();
 
                 } else if (gender.equals("lady")) {
                     downloadforLadyData(); // download both state and motion number
@@ -152,10 +155,11 @@ public class DanceActivity extends RobotActivity {
                     }*/
                     //compareData();
 
-                    ladyDance();
+                    //ladyDance();
 
                 }
-            }});
+            }
+        });
 
 
     }
@@ -172,8 +176,9 @@ public class DanceActivity extends RobotActivity {
 
 
     }
+
     @Override
-    protected void onPause(){
+    protected void onPause() {
         super.onPause();
         music_cha.stop();
 
@@ -185,7 +190,7 @@ public class DanceActivity extends RobotActivity {
         music_cha.start();
     }
 
-    private void manDance(){
+    private void manDance() {
         robotAPI.robot.speak("Man");
 
         robotAPI.motion.moveBody(0f,0f,-3.14f);
@@ -229,20 +234,21 @@ public class DanceActivity extends RobotActivity {
         //upload man or lady's stand by state
         //代表我做完上個動作了，準備做下個動作
         if (gender.equals("man")) {
-            FirebaseData.put("state_man", 1); //1 represent he finish the motion and stand by.
-            docRef.set(FirebaseData);
-        } else if (gender.equals("woman")) {
-            FirebaseData.put("state_woman", 1);
-            docRef.set(FirebaseData);
+            docRef.update("state_man", 1); //1 represent he finish the motion and stand by.
+        } else if (gender.equals("lady")) {
+            Log.d("gender", "gender lady");
+            docRef.update("state_lady", 1);
         }
     }
 
     private void downloadData() {
+        //男生接收動作指令
         //firebase
 
         handler.post(new Runnable() {
 
             int temp = -1;
+
             @Override
             public void run() {
 
@@ -252,13 +258,21 @@ public class DanceActivity extends RobotActivity {
                         if (task.isSuccessful()) {
                             DocumentSnapshot document = task.getResult();
                             if (document.exists()) {
-                                motion = ((Number)document.getData().get("motion_man")).intValue();
+                                motion = ((Number) document.getData().get("motion_man")).intValue();
                                 if (temp == motion) {
 
                                 } else {
-                                    //do
-                                    if (motion == 1)
-                                        iCurrentSpeakSerial = robotAPI.robot.speak("Can you dance with me? miss?"); //因為這句要先講
+                                    //do 將在什麼數字時要做什麼動作寫在這邊
+                                    switch (motion) {
+                                        case 1:
+                                            iCurrentSpeakSerialNO = robotAPI.robot.speak("Can you dance with me? miss?"); //因為這句要先講
+                                            break;
+                                        case 2:
+                                            uploadOKState();
+                                            break;
+                                    }
+                                    //if (motion == 1)
+                                    //    iCurrentSpeakSerial = robotAPI.robot.speak("Can you dance with me? miss?"); //因為這句要先講
                                 }
                                 temp = motion;
                                 Log.d(TAG, "DocumentSnapshot data: " + document.getData());
@@ -347,9 +361,11 @@ public class DanceActivity extends RobotActivity {
             }
         });*/
         //firebase
+        //女生接收指令
         handler.post(new Runnable() {
 
             int temp = -1;
+
             @Override
             public void run() {
 
@@ -359,13 +375,25 @@ public class DanceActivity extends RobotActivity {
                         if (task.isSuccessful()) {
                             DocumentSnapshot document = task.getResult();
                             if (document.exists()) {
-                                motion = ((Number)document.getData().get("motion_man")).intValue();
+                                motion = ((Number) document.getData().get("motion_lady")).intValue();
+                                // 如果上一次抓的跟現在抓到的一樣，代表動作不變
+                                Log.d("if", motion+"");
                                 if (temp == motion) {
-
+                                    Log.d("if", "if");
                                 } else {
-                                    //do
-                                    if (motion == 1)
-                                        iCurrentSpeakSerial = robotAPI.robot.speak("Sure! Let's Dance!"); //因為這句要先講
+                                    //do 將在什麼數字時做什麼動作寫在這
+                                    //if (motion == 1)
+                                    //    iCurrentSpeakSerial = robotAPI.robot.speak("Sure! Let's Dance!"); //因為這句要先講
+                                    switch (motion) {
+                                        case 1:
+                                            uploadOKState();
+                                            Log.d("two", "one");
+                                            break;
+                                        case 2:
+                                            Log.d("two", "two");
+                                            iCurrentSpeakSerialNO = robotAPI.robot.speak("Sure! Let's Dance!"); //因為這句要先講
+                                            break;
+                                    }
                                 }
                                 temp = motion;
                                 Log.d(TAG, "DocumentSnapshot data: " + document.getData());
@@ -378,14 +406,61 @@ public class DanceActivity extends RobotActivity {
                     }
                 });
 
-                handler.postDelayed(this, 10);
+                handler.postDelayed(this, 500);
             }
         });
     }
 
     private void commandSameTime() {
+        handler2.post(new Runnable() {
+
+            @Override
+            public void run() {
+
+                docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                        if (task.isSuccessful()) {
+                            DocumentSnapshot document = task.getResult();
+                            if (document.exists()) {
+                                state_man = ((Number) document.get("state_man")).intValue();
+                                state_lady = ((Number) document.get("state_lady")).intValue();
+                                if (state_man == 1 && state_lady == 1) {
+                                    //代表都好了，上船下一個動作指令，並把雙方狀態歸零
+                                    Log.d("fuckyou", "fuckyou");
+                                    handler2.removeCallbacksAndMessages(null);
+                                    motion_number += 1; //執行下個動作號碼
+                                    docRef.update("motion_man", motion_number);
+                                    docRef.update("motion_lady", motion_number);
+                                    docRef.update("state_man", 0);
+                                    docRef.update("state_lady", 0).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                        @Override
+                                        public void onSuccess(Void aVoid) {
+                                            Log.d(TAG, "DocumentSnapshot successfully updated!");
+                                            commandSameTime();
+                                        }
+                                    })
+                                            .addOnFailureListener(new OnFailureListener() {
+                                                @Override
+                                                public void onFailure(@NonNull Exception e) {
+                                                    Log.w(TAG, "Error updating document", e);
+                                                }
+                                            });
+                                }
+                                Log.d(TAG, "DocumentSnapshot data: " + document.getData());
+                            } else {
+                                Log.d(TAG, "No such document");
+                            }
+                        } else {
+                            Log.d(TAG, "get failed with ", task.getException());
+                        }
+                    }
+                });
+                handler.postDelayed(this, 1500);
+            }
+        });
         //firebase
-        docRef.addSnapshotListener(new EventListener<DocumentSnapshot>() {
+        /*docRef.addSnapshotListener(new EventListener<DocumentSnapshot>() {
             @Override
             public void onEvent(@Nullable DocumentSnapshot snapshot,
                                 @Nullable FirebaseFirestoreException e) {
@@ -405,9 +480,12 @@ public class DanceActivity extends RobotActivity {
                     //Retrieve the state from the database
                     state_man = ((Number)FirebaseData.get("state_man")).intValue();
                     state_lady = ((Number)FirebaseData.get("state_lady")).intValue();
-                    //做事
+                  // Log.d("fuckyou", "man: " + state_man + "\n lady: " + state_lady);
+                    //如果任何一方狀態變就執行下面比對
                     if (state_man == 1 && state_lady == 1 ) {
-                        //下一位
+                        //代表都好了，上船下一個動作指令，並把雙方狀態歸零
+                        Log.d("fuckyou", "fuckyou");
+                        motion_number += 1; //執行下個動作號碼
                         docRef.update("motion_man", motion_number);
                         docRef.update("motion_lady", motion_number);
                         docRef.update("state_man", 0);
@@ -418,7 +496,7 @@ public class DanceActivity extends RobotActivity {
                 }
             }
         });
-        //firebase
+        //firebase*/
     }
 
     /*private void commandManFirst() {
@@ -508,13 +586,13 @@ public class DanceActivity extends RobotActivity {
         //    compareData();
         //}
         //if (state_man.equals("1") && state_lady.equals("1")) {
-            //到這邊代表兩邊都做好了
-            //歸零
-            if (gender.equals("man")) {
-                FirebaseData.put("state_man", "0"); // if data is correct, we should init the data. 0 represent false.
-            } else if (gender.equals("lady")) {
-                FirebaseData.put("state_lady", "0");
-            }
+        //到這邊代表兩邊都做好了
+        //歸零
+        if (gender.equals("man")) {
+            FirebaseData.put("state_man", "0"); // if data is correct, we should init the data. 0 represent false.
+        } else if (gender.equals("lady")) {
+            FirebaseData.put("state_lady", "0");
+        }
         //}
     }
 
