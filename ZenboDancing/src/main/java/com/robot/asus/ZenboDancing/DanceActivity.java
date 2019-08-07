@@ -288,7 +288,7 @@ public class DanceActivity extends RobotActivity {
                                             robotAPI.robot.setExpression(RobotFace.SINGING);
                                             robotAPI.motion.moveBody(0f, 0f, -3.14f);
                                             robotAPI.motion.moveBody(1f, 0f, 0f);
-                                            iCurrentMoveSerial = robotAPI.motion.moveBody(0f, 0f, 1.57f);
+                                            iCurrentMoveSerial = robotAPI.motion.moveBody(0f, 0f, 1.57f);//逆
                                             break;
                                         case 4:
                                             robotAPI.motion.moveBody(-0.1f, 0f, 0f);
@@ -297,13 +297,34 @@ public class DanceActivity extends RobotActivity {
                                             robotAPI.motion.moveBody(0f, 0f, -1.57f);
                                             iCurrentMoveSerial = robotAPI.motion.moveBody(1f, 0f, 0f); //this is 4
                                             break;
+                                        //////////////以上動作是完整一組//以上動作是完整一組//以上動作是完整一組//////////////
                                         case 5:
-                                            music_cha.stop();
-                                            robotAPI.robot.setExpression(RobotFace.SHOCKED);
-                                            iCurrentSpeakSerialNO = robotAPI.robot.speak("thank you!");
-
+                                            robotAPI.motion.moveBody(0f, 0f, -1.57f);//順
+                                            iCurrentMoveSerial = robotAPI.motion.moveBody(0.2f, 0f, 0f);
                                             break;
                                         case 6:
+                                            robotAPI.motion.moveBody(0f, 0f, 2f);
+                                            robotAPI.motion.moveBody(0f, 0f, -2f);
+                                            iCurrentMoveSerial = robotAPI.motion.moveBody(-0.2f, 0f, 0f);
+                                            break;
+                                        case 7:
+                                            uploadOKState();
+                                            break;
+                                        case 8:
+                                            robotAPI.motion.moveBody(0f, 0f, 1.57f);
+                                            iCurrentMoveSerial = robotAPI.motion.moveBody(0f, 0f, -1.57f);
+                                            break;
+                                        case 9:
+                                            Log.d("RobotDevSample","999");
+                                            iCurrentMoveSerial = robotAPI.motion.moveBody(0f, 0f, 1.57f);
+                                            break;
+                                        //////////////以上動作是完整一組//以上動作是完整一組//以上動作是完整一組//////////////
+                                        case 10:
+                                            music_cha.stop();
+                                            robotAPI.robot.setExpression(RobotFace.HAPPY);
+                                            iCurrentSpeakSerialNO = robotAPI.robot.speak("Thank you!");
+                                            break;
+                                        case 11:
                                             robotAPI.robot.setExpression(RobotFace.HIDEFACE);
                                             uploadOKState();
                                             break;
@@ -465,36 +486,36 @@ public class DanceActivity extends RobotActivity {
                                             robotAPI.motion.moveBody(0f, 0f, 1.57f);
                                             iCurrentMoveSerial = robotAPI.motion.moveBody(1f, 0f, 0f);
                                             break;
-                                        case 5:
-                                            uploadOKState();
+                                        //////////////以上動作是完整一組//以上動作是完整一組//以上動作是完整一組//////////////
 
+                                        case 5:
+                                            robotAPI.motion.moveBody(0f, 0f, 1.57f);
+                                            iCurrentMoveSerial = robotAPI.motion.moveBody(-0.2f, 0f, 0f);
                                             break;
                                         case 6:
-                                            iCurrentSpeakSerialNO = robotAPI.robot.speak("hahahaha wow!");
-                                            robotAPI.robot.setExpression(RobotFace.HIDEFACE);
-                                            break;
-                                        /*case 4:
-
-                                            iCurrentSpeakSerialNO =
-                                            break;
-                                        case 5:
-                                            iCurrentSpeakSerialNO =
-                                            break;
-                                        case 6:
-                                            iCurrentSpeakSerialNO =
+                                            robotAPI.motion.moveBody(0f, 0f, -2f);
+                                            robotAPI.motion.moveBody(0f, 0f, 2f);
+                                            iCurrentMoveSerial = robotAPI.motion.moveBody(0.2f, 0f, 0f);
                                             break;
                                         case 7:
-                                            iCurrentSpeakSerialNO =
+                                            robotAPI.motion.moveBody(0f, 0f, -1.57f);
+                                            iCurrentMoveSerial = robotAPI.motion.moveBody(0f, 0f, 1.57f);
                                             break;
                                         case 8:
-                                            iCurrentSpeakSerialNO =
+                                            uploadOKState();
                                             break;
                                         case 9:
-                                            iCurrentSpeakSerialNO =
+                                            iCurrentMoveSerial = robotAPI.motion.moveBody(0f, 0f, -1.57f);
                                             break;
+                                        //////////////以上動作是完整一組//以上動作是完整一組//以上動作是完整一組//////////////
                                         case 10:
+                                            uploadOKState();
+                                            break;
+                                        case 11:
+                                            iCurrentSpeakSerialNO = robotAPI.robot.speak("You are welcome");
+                                            robotAPI.robot.setExpression(RobotFace.HIDEFACE);
+                                            break;
 
-                                            break;*/
                                     }
                                 }
                                 temp = motion;
