@@ -3,6 +3,7 @@ package com.robot.asus.ZenboDancing;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.LinearLayout;
 
 import com.asus.robotframework.API.RobotCallback;
@@ -72,6 +73,9 @@ public class MainActivity extends RobotActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        //保持畫面不讓zenbo臉打斷
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
         man = (LinearLayout)findViewById(R.id.man);
         lady = (LinearLayout)findViewById(R.id.lady);

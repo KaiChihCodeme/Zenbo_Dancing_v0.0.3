@@ -10,6 +10,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.TextView;
 
 import com.asus.robotframework.API.MotionControl;
@@ -48,6 +49,7 @@ public class DanceActivity extends RobotActivity {
     private int state_lady;
     private static int motion_number = 0; //this zenbo next want to do
     private static int iCurrentSpeakSerialNO;
+    private static int iCurrentMoveSerial;
 
     private static FirebaseFirestore db = FirebaseFirestore.getInstance();
     private static DocumentReference docRef = db.collection("dancing").document("serial");
@@ -69,7 +71,13 @@ public class DanceActivity extends RobotActivity {
 
             if (serial == iCurrentSpeakSerialNO && state != RobotCmdState.ACTIVE) {
                 //如果講完話，就傳好了
-                Log.d("RobotDevSample", "command: " + iCurrentSpeakSerialNO + " SUCCEED");
+                Log.d("RobotDevSample", "serial: " + serial + "\ncommand: " + iCurrentSpeakSerialNO + " SUCCEED");
+                uploadOKState();
+            }
+
+            if (serial == iCurrentMoveSerial && state == RobotCmdState.SUCCEED) {
+                //如果講完話，就傳好了
+                Log.d("RobotDevSample", "moveserial: " + serial + "\ncommand: " + iCurrentMoveSerial + " SUCCEED");
                 uploadOKState();
             }
         }
@@ -117,6 +125,9 @@ public class DanceActivity extends RobotActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dance);
+
+        //保持畫面不讓zenbo臉打斷
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
         Intent intent = getIntent();
         gender = intent.getStringExtra("motion");
@@ -193,35 +204,36 @@ public class DanceActivity extends RobotActivity {
     private void manDance() {
         robotAPI.robot.speak("Man");
 
-        robotAPI.motion.moveBody(0f,0f,-3.14f);
-        robotAPI.motion.moveBody(1f,0f,0f);
-        robotAPI.motion.moveBody(0f,0f,1.57f);
-        robotAPI.motion.moveBody(-0.1f,0f,0f);
+        robotAPI.motion.moveBody(0f, 0f, -3.14f);
+        robotAPI.motion.moveBody(1f, 0f, 0f);
+        robotAPI.motion.moveBody(0f, 0f, 1.57f);
+        robotAPI.motion.moveBody(-0.1f, 0f, 0f);
         robotAPI.utility.playAction(22);
-        robotAPI.motion.moveBody(0f,0f,-3.14f);
-        robotAPI.motion.moveBody(0f,0f,-1.57f);
-        robotAPI.motion.moveBody(1f,0f,0f);
+        robotAPI.motion.moveBody(0f, 0f, -3.14f);
+        robotAPI.motion.moveBody(0f, 0f, -1.57f);
+        robotAPI.motion.moveBody(1f, 0f, 0f);
     }
 
-    private void manDance2(){
+    private void manDance2() {
 
         //逆90
-        robotAPI.motion.moveBody(0f,0f,1.57f);
+        robotAPI.motion.moveBody(0f, 0f, 1.57f);
         //前進
-        robotAPI.motion.moveBody(0.5f,0f,0f);
+        robotAPI.motion.moveBody(0.5f, 0f, 0f);
     }
-    private void ladyDance(){
+
+    private void ladyDance() {
 
         // float a = (float)Math.PI;
         robotAPI.robot.speak("Lady");
-        robotAPI.motion.moveBody(0f,0f,3.14f);
-        robotAPI.motion.moveBody(1f,0f,0f);
-        robotAPI.motion.moveBody(0f,0f,-1.57f);
-        robotAPI.motion.moveBody(-0.1f,0f,0f);
+        robotAPI.motion.moveBody(0f, 0f, 3.14f);
+        robotAPI.motion.moveBody(1f, 0f, 0f);
+        robotAPI.motion.moveBody(0f, 0f, -1.57f);
+        robotAPI.motion.moveBody(-0.1f, 0f, 0f);
         robotAPI.utility.playAction(22);
-        robotAPI.motion.moveBody(0f,0f,3.14f);
-        robotAPI.motion.moveBody(0f,0f,1.57f);
-        robotAPI.motion.moveBody(1f,0f,0f);
+        robotAPI.motion.moveBody(0f, 0f, 3.14f);
+        robotAPI.motion.moveBody(0f, 0f, 1.57f);
+        robotAPI.motion.moveBody(1f, 0f, 0f);
     }
 
     /*private void uploadMotion() {
@@ -265,11 +277,57 @@ public class DanceActivity extends RobotActivity {
                                     //do 將在什麼數字時要做什麼動作寫在這邊
                                     switch (motion) {
                                         case 1:
+                                            robotAPI.robot.setExpression(RobotFace.HELPLESS);
                                             iCurrentSpeakSerialNO = robotAPI.robot.speak("Can you dance with me? miss?"); //因為這句要先講
                                             break;
                                         case 2:
                                             uploadOKState();
                                             break;
+                                        case 3:
+                                            //start.setText("11111111111111");
+                                            robotAPI.robot.setExpression(RobotFace.SINGING);
+                                            robotAPI.motion.moveBody(0f, 0f, -3.14f);
+                                            robotAPI.motion.moveBody(1f, 0f, 0f);
+                                            iCurrentMoveSerial = robotAPI.motion.moveBody(0f, 0f, 1.57f);
+                                            break;
+                                        case 4:
+                                            robotAPI.motion.moveBody(-0.1f, 0f, 0f);
+                                            robotAPI.utility.playAction(22);
+                                            robotAPI.motion.moveBody(0f, 0f, -3.14f);
+                                            robotAPI.motion.moveBody(0f, 0f, -1.57f);
+                                            iCurrentMoveSerial = robotAPI.motion.moveBody(1f, 0f, 0f); //this is 4
+                                            break;
+                                        case 5:
+                                            music_cha.stop();
+                                            robotAPI.robot.setExpression(RobotFace.SHOCKED);
+                                            iCurrentSpeakSerialNO = robotAPI.robot.speak("thank you!");
+
+                                            break;
+                                        case 6:
+                                            robotAPI.robot.setExpression(RobotFace.HIDEFACE);
+                                            uploadOKState();
+                                            break;
+                                        /*case 4:
+
+                                            break;
+                                        case 5:
+                                            iCurrentSpeakSerialNO =
+                                            break;
+                                        case 6:
+                                            iCurrentSpeakSerialNO =
+                                            break;
+                                        case 7:
+                                            iCurrentSpeakSerialNO =
+                                            break;
+                                        case 8:
+                                            iCurrentSpeakSerialNO =
+                                            break;
+                                        case 9:
+                                            iCurrentSpeakSerialNO =
+                                            break;
+                                        case 10:
+
+                                            break;*/
                                     }
                                     //if (motion == 1)
                                     //    iCurrentSpeakSerial = robotAPI.robot.speak("Can you dance with me? miss?"); //因為這句要先講
@@ -377,15 +435,16 @@ public class DanceActivity extends RobotActivity {
                             if (document.exists()) {
                                 motion = ((Number) document.getData().get("motion_lady")).intValue();
                                 // 如果上一次抓的跟現在抓到的一樣，代表動作不變
-                                Log.d("if", motion+"");
+                                Log.d("if", motion + "");
                                 if (temp == motion) {
                                     Log.d("if", "if");
                                 } else {
                                     //do 將在什麼數字時做什麼動作寫在這
                                     //if (motion == 1)
-                                    //    iCurrentSpeakSerial = robotAPI.robot.speak("Sure! Let's Dance!"); //因為這句要先講
+                                    //  iCurrentSpeakSerial = robotAPI.robot.speak("Sure! Let's Dance!"); //因為這句要先講
                                     switch (motion) {
                                         case 1:
+                                            robotAPI.robot.setExpression(RobotFace.EXPECTING);
                                             uploadOKState();
                                             Log.d("two", "one");
                                             break;
@@ -393,6 +452,49 @@ public class DanceActivity extends RobotActivity {
                                             Log.d("two", "two");
                                             iCurrentSpeakSerialNO = robotAPI.robot.speak("Sure! Let's Dance!"); //因為這句要先講
                                             break;
+                                        case 3:
+                                            robotAPI.robot.setExpression(RobotFace.SHY);
+                                            robotAPI.motion.moveBody(0f, 0f, 3.14f);
+                                            robotAPI.motion.moveBody(1f, 0f, 0f);
+                                            iCurrentMoveSerial = robotAPI.motion.moveBody(0f, 0f, -1.57f);
+                                            break;
+                                        case 4:
+                                            robotAPI.motion.moveBody(-0.1f, 0f, 0f);
+                                            robotAPI.utility.playAction(22);
+                                            robotAPI.motion.moveBody(0f, 0f, 3.14f);
+                                            robotAPI.motion.moveBody(0f, 0f, 1.57f);
+                                            iCurrentMoveSerial = robotAPI.motion.moveBody(1f, 0f, 0f);
+                                            break;
+                                        case 5:
+                                            uploadOKState();
+
+                                            break;
+                                        case 6:
+                                            iCurrentSpeakSerialNO = robotAPI.robot.speak("hahahaha wow!");
+                                            robotAPI.robot.setExpression(RobotFace.HIDEFACE);
+                                            break;
+                                        /*case 4:
+
+                                            iCurrentSpeakSerialNO =
+                                            break;
+                                        case 5:
+                                            iCurrentSpeakSerialNO =
+                                            break;
+                                        case 6:
+                                            iCurrentSpeakSerialNO =
+                                            break;
+                                        case 7:
+                                            iCurrentSpeakSerialNO =
+                                            break;
+                                        case 8:
+                                            iCurrentSpeakSerialNO =
+                                            break;
+                                        case 9:
+                                            iCurrentSpeakSerialNO =
+                                            break;
+                                        case 10:
+
+                                            break;*/
                                     }
                                 }
                                 temp = motion;
@@ -406,7 +508,7 @@ public class DanceActivity extends RobotActivity {
                     }
                 });
 
-                handler.postDelayed(this, 500);
+                handler.postDelayed(this, 10);
             }
         });
     }
@@ -456,7 +558,7 @@ public class DanceActivity extends RobotActivity {
                         }
                     }
                 });
-                handler.postDelayed(this, 1500);
+                handler.postDelayed(this, 3000);
             }
         });
         //firebase
