@@ -178,7 +178,7 @@ public class DanceActivity extends RobotActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        music_cha = MediaPlayer.create(this, R.raw.chacha);
+        music_cha = MediaPlayer.create(this, R.raw.chacha2);
     }
 
     @Override
@@ -197,7 +197,7 @@ public class DanceActivity extends RobotActivity {
 
 
     private void musicPlay() {
-        music_cha = MediaPlayer.create(this, R.raw.chacha);
+        music_cha = MediaPlayer.create(this, R.raw.chacha2);
         music_cha.start();
     }
 
