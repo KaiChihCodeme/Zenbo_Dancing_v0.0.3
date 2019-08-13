@@ -1,6 +1,7 @@
 package com.robot.asus.ZenboDancing;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.media.MediaPlayer;
 import android.os.Handler;
 import android.support.annotation.NonNull;
@@ -16,8 +17,11 @@ import android.widget.TextView;
 import com.asus.robotframework.API.MotionControl;
 import com.asus.robotframework.API.RobotCallback;
 import com.asus.robotframework.API.RobotCmdState;
+import com.asus.robotframework.API.RobotCommand;
 import com.asus.robotframework.API.RobotErrorCode;
 import com.asus.robotframework.API.RobotFace;
+import com.asus.robotframework.API.SpeakConfig;
+import com.asus.robotframework.API.WheelLights;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -32,6 +36,7 @@ import com.robot.asus.robotactivity.RobotActivity;
 
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Timer;
@@ -210,6 +215,9 @@ public class DanceActivity extends RobotActivity {
                                     //do 將在什麼數字時要做什麼動作寫在這邊
                                     switch (motion) {
                                         case 1:
+                                            robotAPI.wheelLights.setColor(WheelLights.Lights.SYNC_BOTH,0xff, 0xFF9000);
+                                            robotAPI.wheelLights.setBrightness(WheelLights.Lights.SYNC_BOTH, 0xff, 50);
+                                            robotAPI.wheelLights.startMarquee(WheelLights.Lights.SYNC_BOTH, WheelLights.Direction.DIRECTION_FORWARD, 1, 2, 0);
                                             robotAPI.robot.setExpression(RobotFace.HELPLESS);
                                             iCurrentSpeakSerialNO = robotAPI.robot.speak("Can you dance with me? miss?"); //因為這句要先講
                                             break;
@@ -288,12 +296,11 @@ public class DanceActivity extends RobotActivity {
                                             iCurrentMoveSerial = robotAPI.motion.moveBody(0f, 0f, -1.57f);
                                             Log.d("check123", "8");
                                             break;
-
+///
                                         case 16:
                                             Log.d("check123", "9");
                                             iCurrentMoveSerial = robotAPI.motion.moveBody(0f, 0f, 1.57f);
                                             break;//男
-
                                         case 17:
                                             Log.d("check123", "10");
                                             music_cha.stop();
@@ -302,6 +309,7 @@ public class DanceActivity extends RobotActivity {
                                             break;
                                         case 18:
                                             Log.d("check123", "11");
+                                            robotAPI.wheelLights.turnOff(WheelLights.Lights.SYNC_BOTH, 0xff);
                                             robotAPI.robot.setExpression(RobotFace.HIDEFACE);
                                             uploadOKState();
                                             handler.removeCallbacksAndMessages(null);
@@ -350,13 +358,16 @@ public class DanceActivity extends RobotActivity {
                                     //do 將在什麼數字時做什麼動作寫在這
                                     switch (motion) {
                                         case 1:
+                                            robotAPI.wheelLights.setColor(WheelLights.Lights.SYNC_BOTH,0xff, 0x00ff0000);
+                                            robotAPI.wheelLights.setBrightness(WheelLights.Lights.SYNC_BOTH, 0xff, 50);
+                                            robotAPI.wheelLights.startMarquee(WheelLights.Lights.SYNC_BOTH, WheelLights.Direction.DIRECTION_FORWARD, 1, 2, 0);
                                             robotAPI.robot.setExpression(RobotFace.EXPECTING);
                                             uploadOKState();
                                             Log.d("two", "one");
                                             break;
                                         case 2:
                                             Log.d("two", "two");
-                                            iCurrentSpeakSerialNO = robotAPI.robot.speak("Sure! Let's Dance!"); //因為這句要先講
+                                            iCurrentSpeakSerialNO = robotAPI.robot.speak("Sure! Let's Dance!", new SpeakConfig().pitch(120)); //因為這句要先講
                                             break;
                                         //////////////以上動作是完整一組//以上動作是完整一組//以上動作是完整一組//////////////
                                         case 3:
@@ -436,11 +447,13 @@ public class DanceActivity extends RobotActivity {
                                             iCurrentMoveSerial = robotAPI.motion.moveBody(0f, 0f, -1.57f);
                                             Log.d("check123", "9");
                                             break;//女
+
                                         case 17:
                                             uploadOKState();
                                             Log.d("check123", "10");
                                             break;
                                         case 18:
+                                            robotAPI.wheelLights.turnOff(WheelLights.Lights.SYNC_BOTH, 0xff);
                                             iCurrentSpeakSerialNO = robotAPI.robot.speak("You are welcome");
                                             robotAPI.robot.setExpression(RobotFace.HIDEFACE);
                                             Log.d("check123", "11");
