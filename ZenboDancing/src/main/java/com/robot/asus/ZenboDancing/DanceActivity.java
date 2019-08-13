@@ -301,19 +301,38 @@ public class DanceActivity extends RobotActivity {
                                             Log.d("check123", "9");
                                             iCurrentMoveSerial = robotAPI.motion.moveBody(0f, 0f, 1.57f);
                                             break;//男
+                                        ///////////以上動作是完整一組//以上動作是完整一組//以上動作是完整一組//////////////
                                         case 17:
-                                            Log.d("check123", "10");
+                                            uploadOKState();
+                                            break;
+                                        case 18:
+                                            iCurrentMoveSerial = robotAPI.motion.moveBody(0f, 0f, -1.57f);//順
+                                            break;
+                                        case 19:
+                                            uploadOKState();
+                                            break;
+                                        case 20:
+                                            iCurrentMoveSerial = robotAPI.robot.speak("Wow! It's Fantastic!");
+                                            break;
+                                        case 21:
+                                            uploadOKState();
+                                            break;
+                                        case 22:
+                                            iCurrentMoveSerial = robotAPI.motion.moveBody(0, 0f, 1.57f);
+                                            break;
+                                        case 23:
                                             music_cha.stop();
                                             robotAPI.robot.setExpression(RobotFace.HAPPY);
                                             iCurrentSpeakSerialNO = robotAPI.robot.speak("Thank you!");
                                             break;
-                                        case 18:
-                                            Log.d("check123", "11");
+                                        case 24:
+
                                             robotAPI.wheelLights.turnOff(WheelLights.Lights.SYNC_BOTH, 0xff);
                                             robotAPI.robot.setExpression(RobotFace.HIDEFACE);
                                             uploadOKState();
                                             handler.removeCallbacksAndMessages(null);
                                             break;
+
 
                                     }
 
@@ -449,17 +468,41 @@ public class DanceActivity extends RobotActivity {
                                             break;//女
 
                                         case 17:
+                                            //變顏色
+                                            iCurrentMoveSerial = robotAPI.robot.speak("It's my solo time!", new SpeakConfig().pitch(120));
+                                            break;
+                                        case 18:
+                                            robotAPI.motion.moveBody(0f, 0f, -1.57f);//順
+                                            robotAPI.motion.moveHead(45,0, MotionControl.SpeedLevel.Head.L3);
+                                            iCurrentMoveSerial = robotAPI.motion.moveBody(1f, 0f, 0);
+                                            break;
+                                        case 19:
+                                            robotAPI.motion.moveHead(0,0, MotionControl.SpeedLevel.Head.L3);
+                                            iCurrentMoveSerial = robotAPI.motion.moveBody(0f, 0f, 1.57f);
+                                            break;
+                                        case 20:
+
+                                            iCurrentMoveSerial = robotAPI.utility.playAction(22);
+
+                                            break;
+                                        case 21:
+                                            robotAPI.motion.moveBody(0f, 0f, 1.57f);
+                                            iCurrentMoveSerial = robotAPI.motion.moveBody(1f, 0f, 0);
+                                            break;
+                                        case 22:
+                                            iCurrentMoveSerial = robotAPI.motion.moveBody(0, 0f, -1.57f);
+                                            break;
+                                        case 23:
                                             uploadOKState();
                                             Log.d("check123", "10");
                                             break;
-                                        case 18:
+                                        case 24:
                                             robotAPI.wheelLights.turnOff(WheelLights.Lights.SYNC_BOTH, 0xff);
                                             iCurrentSpeakSerialNO = robotAPI.robot.speak("You are welcome");
                                             robotAPI.robot.setExpression(RobotFace.HIDEFACE);
                                             Log.d("check123", "11");
                                             handler.removeCallbacksAndMessages(null);
                                             break;
-
 
                                     }
                                 }
