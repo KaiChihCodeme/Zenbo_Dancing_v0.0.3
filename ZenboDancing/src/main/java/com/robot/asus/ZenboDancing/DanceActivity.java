@@ -163,6 +163,7 @@ public class DanceActivity extends RobotActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        robotAPI.robot.setExpression(RobotFace.HIDEFACE);
         music_cha = MediaPlayer.create(this, R.raw.chacha2);
     }
 
