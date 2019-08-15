@@ -44,19 +44,24 @@ import java.util.TimerTask;
 
 public class DanceActivity extends RobotActivity {
     private String TAG = "DanceActivity";
-    private TextView start;
+    private TextView start, genderTextView;
     private static String gender;
     private MediaPlayer music_cha = new MediaPlayer();
     final Handler handler = new Handler();
     final Handler handler2 = new Handler();
     final Handler handler3 = new Handler();
+    final Handler handlerRemoteControl = new Handler();
     private int motion;
     private int state_man;
     private int state_lady;
-    private static int motion_number = 0; //this zenbo next want to do
+    private static int motion_number; //this zenbo next want to do
     private static int iCurrentSpeakSerialNO;
     private static int iCurrentMoveSerial;
     private static int count = 0;
+    private static boolean isDancing;
+    private static Boolean EmergencyStop;
+    private static Boolean isCanStartLady;
+    private static Boolean isCanStartMan;
 
     private static FirebaseFirestore db = FirebaseFirestore.getInstance();
     private static DocumentReference docRef = db.collection("dancing").document("serial");
@@ -138,22 +143,29 @@ public class DanceActivity extends RobotActivity {
 
         Intent intent = getIntent();
         gender = intent.getStringExtra("motion");
-        Log.d(TAG, "gender: " + gender);
+
+        genderTextView = (TextView) findViewById(R.id.genderTextView);
+        genderTextView.setText(gender);
 
         start = (TextView) findViewById(R.id.start);
         start.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (gender.equals("man")) {
-                    //handlerForUpdate();
-                    count=3;
+
+                //isDancing代表zenbo是否正在跳舞
+                if (gender.equals("man") && !isDancing) {
+                    getinitMotionNumber();
+                    count = 3;
                     commandSameTime();
                     downloadData(); // download both state and motion number
                     /** ------------------------------------------------------------------------------------------------ */
-                    music_cha.start();
-                } else if (gender.equals("lady")) {
+
+                    musicPlay();
+                } else if (gender.equals("lady") && !isDancing) {
                     downloadforLadyData(); // download both state and motion number
                 }
+
+                isDancing = true;
             }
         });
 
@@ -164,7 +176,10 @@ public class DanceActivity extends RobotActivity {
     protected void onResume() {
         super.onResume();
         robotAPI.robot.setExpression(RobotFace.HIDEFACE);
-        music_cha = MediaPlayer.create(this, R.raw.chacha2);
+
+
+        remoteControl();
+
     }
 
     @Override
@@ -180,7 +195,6 @@ public class DanceActivity extends RobotActivity {
         music_cha.stop();
 
     }
-
 
 
     private static void uploadOKState() {
@@ -216,7 +230,7 @@ public class DanceActivity extends RobotActivity {
                                     //do 將在什麼數字時要做什麼動作寫在這邊
                                     switch (motion) {
                                         case 1:
-                                            robotAPI.wheelLights.setColor(WheelLights.Lights.SYNC_BOTH,0xff, 0xFF9000);
+                                            robotAPI.wheelLights.setColor(WheelLights.Lights.SYNC_BOTH, 0xff, 0xFF9000);
                                             robotAPI.wheelLights.setBrightness(WheelLights.Lights.SYNC_BOTH, 0xff, 50);
                                             robotAPI.wheelLights.startMarquee(WheelLights.Lights.SYNC_BOTH, WheelLights.Direction.DIRECTION_FORWARD, 1, 2, 0);
                                             robotAPI.robot.setExpression(RobotFace.HELPLESS);
@@ -243,7 +257,7 @@ public class DanceActivity extends RobotActivity {
 
                                         case 5:
                                             //start.setText("11111111111111");
-                                            robotAPI.robot.setExpression(RobotFace.SINGING);
+                                            robotAPI.robot.setExpression(RobotFace.EXPECTING);
                                             robotAPI.motion.moveBody(0f, 0f, -3.14f);
                                             robotAPI.motion.moveBody(1f, 0f, 0f);
                                             iCurrentMoveSerial = robotAPI.motion.moveBody(0f, 0f, 1.57f);//逆
@@ -278,6 +292,7 @@ public class DanceActivity extends RobotActivity {
                                             break;
                                         //////////////以上動作是完整一組//以上動作是完整一組//以上動作是完整一組//////////////
                                         case 12:
+                                            robotAPI.robot.setExpression(RobotFace.INTERESTED);
                                             robotAPI.motion.moveBody(0f, 0f, -1.57f);//順
                                             iCurrentMoveSerial = robotAPI.motion.moveBody(0.1f, 0f, 0f);
                                             Log.d("check123", "5");
@@ -304,6 +319,7 @@ public class DanceActivity extends RobotActivity {
                                             break;//男
                                         ///////////以上動作是完整一組//以上動作是完整一組//以上動作是完整一組//////////////
                                         case 17:
+                                            robotAPI.robot.setExpression(RobotFace.SHOCKED);
                                             uploadOKState();
                                             break;
                                         case 18:
@@ -313,6 +329,7 @@ public class DanceActivity extends RobotActivity {
                                             uploadOKState();
                                             break;
                                         case 20:
+                                            robotAPI.robot.setExpression(RobotFace.SHY);
                                             iCurrentMoveSerial = robotAPI.robot.speak("Wow! It's Fantastic!");
                                             break;
                                         case 21:
@@ -322,7 +339,7 @@ public class DanceActivity extends RobotActivity {
                                             iCurrentMoveSerial = robotAPI.motion.moveBody(0, 0f, 1.57f);
                                             break;
                                         case 23:
-                                            music_cha.stop();
+                                            musicStop();
                                             robotAPI.robot.setExpression(RobotFace.HAPPY);
                                             iCurrentSpeakSerialNO = robotAPI.robot.speak("Thank you!");
                                             break;
@@ -331,7 +348,14 @@ public class DanceActivity extends RobotActivity {
                                             robotAPI.wheelLights.turnOff(WheelLights.Lights.SYNC_BOTH, 0xff);
                                             robotAPI.robot.setExpression(RobotFace.HIDEFACE);
                                             uploadOKState();
+                                            break;
+                                        case 25:
+                                            docRef.update("motion", 0);
+                                            handler2.removeCallbacksAndMessages(null);
+                                            docRef.update("state_man", 1);
+                                            docRef.update("state_lady", 1);
                                             handler.removeCallbacksAndMessages(null);
+                                            isDancing = false;
                                             break;
 
 
@@ -378,7 +402,7 @@ public class DanceActivity extends RobotActivity {
                                     //do 將在什麼數字時做什麼動作寫在這
                                     switch (motion) {
                                         case 1:
-                                            robotAPI.wheelLights.setColor(WheelLights.Lights.SYNC_BOTH,0xff, 0x00ff0000);
+                                            robotAPI.wheelLights.setColor(WheelLights.Lights.SYNC_BOTH, 0xff, 0x00ff0000);
                                             robotAPI.wheelLights.setBrightness(WheelLights.Lights.SYNC_BOTH, 0xff, 50);
                                             robotAPI.wheelLights.startMarquee(WheelLights.Lights.SYNC_BOTH, WheelLights.Direction.DIRECTION_FORWARD, 1, 2, 0);
                                             robotAPI.robot.setExpression(RobotFace.EXPECTING);
@@ -422,6 +446,7 @@ public class DanceActivity extends RobotActivity {
                                         //////////////以上動作是完整一組//以上動作是完整一組//以上動作是完整一組//////////////
 
                                         case 7:
+                                            robotAPI.robot.setExpression(RobotFace.PLEASED);
                                             robotAPI.motion.moveBody(0f, 0f, 1.57f);
                                             iCurrentMoveSerial = robotAPI.motion.moveBody(-0.1f, 0f, 0f);
                                             break;
@@ -443,6 +468,7 @@ public class DanceActivity extends RobotActivity {
                                             break;
                                         //////////////以上動作是完整一組//以上動作是完整一組//以上動作是完整一組//////////////
                                         case 12:
+                                            robotAPI.robot.setExpression(RobotFace.INNOCENT);
                                             robotAPI.motion.moveBody(0f, 0f, 1.57f);
                                             iCurrentMoveSerial = robotAPI.motion.moveBody(-0.1f, 0f, 0f);
                                             Log.d("check123", "5");
@@ -470,15 +496,16 @@ public class DanceActivity extends RobotActivity {
 
                                         case 17:
                                             //變顏色
+                                            robotAPI.robot.setExpression(RobotFace.PROUD);
                                             iCurrentMoveSerial = robotAPI.robot.speak("It's my solo time!", new SpeakConfig().pitch(120));
                                             break;
                                         case 18:
                                             robotAPI.motion.moveBody(0f, 0f, -1.57f);//順
-                                            robotAPI.motion.moveHead(45,0, MotionControl.SpeedLevel.Head.L3);
+                                            robotAPI.motion.moveHead(45, 0, MotionControl.SpeedLevel.Head.L3);
                                             iCurrentMoveSerial = robotAPI.motion.moveBody(1f, 0f, 0);
                                             break;
                                         case 19:
-                                            robotAPI.motion.moveHead(0,0, MotionControl.SpeedLevel.Head.L3);
+                                            robotAPI.motion.moveHead(0, 0, MotionControl.SpeedLevel.Head.L3);
                                             iCurrentMoveSerial = robotAPI.motion.moveBody(0f, 0f, 1.57f);
                                             break;
                                         case 20:
@@ -487,6 +514,7 @@ public class DanceActivity extends RobotActivity {
 
                                             break;
                                         case 21:
+                                            robotAPI.robot.setExpression(RobotFace.HAPPY);
                                             robotAPI.motion.moveBody(0f, 0f, 1.57f);
                                             iCurrentMoveSerial = robotAPI.motion.moveBody(1f, 0f, 0);
                                             break;
@@ -503,6 +531,7 @@ public class DanceActivity extends RobotActivity {
                                             robotAPI.robot.setExpression(RobotFace.HIDEFACE);
                                             Log.d("check123", "11");
                                             handler.removeCallbacksAndMessages(null);
+                                            isDancing = false;
                                             break;
 
                                     }
@@ -537,7 +566,16 @@ public class DanceActivity extends RobotActivity {
                             if (document.exists()) {
                                 state_man = ((Number) document.get("state_man")).intValue();
                                 state_lady = ((Number) document.get("state_lady")).intValue();
-                                if (state_man == 1 && state_lady == 1 && count == 3) {
+                                boolean EmergencyStop = (Boolean) document.get("EmergencyStop");
+                                if (EmergencyStop) {
+                                    handler.removeCallbacksAndMessages(null);
+                                    handler3.removeCallbacksAndMessages(null);
+                                    docRef.update("state_man", 0);
+                                    docRef.update("state_lady", 0);
+                                    handler2.removeCallbacksAndMessages(null);
+                                }
+
+                                if (state_man == 1 && state_lady == 1 && count == 3 && !EmergencyStop) {
                                     count = 0;
                                     //代表都好了，上船下一個動作指令，並把雙方狀態歸零
                                     Log.d("fuckyou", "fuckyou");
@@ -598,6 +636,81 @@ public class DanceActivity extends RobotActivity {
         });
         //firebase
         //firebase*/
+    }
+
+    public void getinitMotionNumber() {
+        docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()) {
+                    DocumentSnapshot document = task.getResult();
+                    if (document.exists()) {
+                        motion_number = ((Number) document.get("motion")).intValue();
+                    } else {
+                        Log.d(TAG, "No such document");
+                    }
+                } else {
+                    Log.d(TAG, "get failed with ", task.getException());
+                }
+            }
+        });
+    }
+
+    private void remoteControl() {
+
+        docRef.addSnapshotListener(new EventListener<DocumentSnapshot>() {
+            @Override
+            public void onEvent(@Nullable DocumentSnapshot snapshot,
+                                @Nullable FirebaseFirestoreException e) {
+                EmergencyStop = (Boolean) snapshot.getData().get("EmergencyStop");
+                isCanStartMan = (Boolean) snapshot.getData().get("isCanStartMan");
+                isCanStartLady = (Boolean) snapshot.getData().get("isCanStartLady");
+                if (EmergencyStop) {
+                    handler2.removeCallbacksAndMessages(null);
+                    handler.removeCallbacksAndMessages(null);
+                    musicStop();
+                    robotAPI.robot.setExpression(RobotFace.HIDEFACE);
+                    robotAPI.cancelCommandAll();
+                    robotAPI.wheelLights.turnOff(WheelLights.Lights.SYNC_BOTH, 0xff);
+                    docRef.update("motion", 0);
+                    docRef.update("state_man", 1);
+                    docRef.update("state_lady", 1);
+                    EmergencyStop = false;
+                    isDancing = false;
+                    docRef.update("EmergencyStop", EmergencyStop);
+                }
+                if (isCanStartMan && !isDancing&&gender.equals("man")) {
+                    getinitMotionNumber();
+                    count = 3;
+                    commandSameTime();
+                    downloadData(); // download both state and motion number
+                    musicPlay();
+                    isCanStartMan = false;
+                    docRef.update("isCanStartMan", isCanStartMan);
+                    isCanStartLady = false;
+                    docRef.update("isCanStartLady", isCanStartLady);
+                    isDancing = true;
+                } else if (isCanStartLady && !isDancing&&gender.equals("lady")) {
+
+                    downloadforLadyData(); // download both state and motion number
+
+                    isDancing = true;
+                }
+
+
+            }
+        });
+
+
+    }
+
+    private void musicPlay() {
+        music_cha = MediaPlayer.create(this, R.raw.chacha2);
+        music_cha.start();
+    }
+
+    private void musicStop() {
+        music_cha.stop();
     }
 
     private void handlerForUpdate() {
