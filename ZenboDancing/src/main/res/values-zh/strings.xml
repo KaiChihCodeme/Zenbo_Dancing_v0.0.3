@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">ZenboDancing</string>
+
+    <!-- MA -->
+    <string name="MA_who">我將會和另一個Zenbo一起跳舞，你可以告訴我我是誰嗎?</string>
+    <string name="MA_man">男</string>
+    <string name="MA_lady">女</string>
+
+    <!-- DanceActivity -->
+    <string name="DA_wm">小姐，可以跟我跳隻舞嗎?</string>
+    <string name="DA_where">欸!你要去哪阿?不要丟下我一個人!</string>
+    <string name="DA_fantastic">哇!跳得太棒了吧!</string>
+    <string name="DA_thanks">謝謝大家!右!</string>
+    <string name="DA_sure">好呀!我們一起來跳舞吧!</string>
+    <string name="DA_sorry">喔! 抱歉我跳錯了哈哈!</string>
+    <string name="DA_solo">現在是我的SOLO時間!</string>
+    <string name="DA_thank">謝謝大家!葉!</string>
+</resources>

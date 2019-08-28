@@ -18,7 +18,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:text="LADY"
+            android:text= "@string/MA_lady"
             android:textColor="#FFFFFF"
             android:textSize="90sp" />
 
@@ -34,7 +34,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:text="MAN"
+            android:text="@string/MA_man"
             android:textColor="#FFFFFF"
             android:textSize="90sp" />
 

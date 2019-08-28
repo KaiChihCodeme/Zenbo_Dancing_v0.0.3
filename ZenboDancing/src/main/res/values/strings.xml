@@ -1,3 +1,18 @@
 <resources>
     <string name="app_name">ZenboDancing</string>
+
+    <!-- MA -->
+    <string name="MA_who">I will dance with another zenbo! Could you tell me who am I?</string>
+    <string name="MA_man">MAN</string>
+    <string name="MA_lady">LADY</string>
+
+    <!-- DanceActivity -->
+    <string name="DA_wm">Can you dance with me? miss?</string>
+    <string name="DA_where">"Hey! Where are you going? Don't leave me alone"</string>
+    <string name="DA_fantastic">Wow! It\'s Fantastic!</string>
+    <string name="DA_thanks">Thank you! YO!</string>
+    <string name="DA_sure">Sure! Let\'s Dance!</string>
+    <string name="DA_sorry">OH! I\'m so Sorry!</string>
+    <string name="DA_solo">It\'s my solo time!</string>
+    <string name="DA_thank">Thank you! YEAH!</string>
 </resources>

@@ -233,8 +233,8 @@ public class DanceActivity extends RobotActivity {
                                             robotAPI.wheelLights.setColor(WheelLights.Lights.SYNC_BOTH, 0xff, 0xFF9000);
                                             robotAPI.wheelLights.setBrightness(WheelLights.Lights.SYNC_BOTH, 0xff, 50);
                                             robotAPI.wheelLights.startMarquee(WheelLights.Lights.SYNC_BOTH, WheelLights.Direction.DIRECTION_FORWARD, 1, 2, 0);
-                                            robotAPI.robot.setExpression(RobotFace.HELPLESS);
-                                            iCurrentSpeakSerialNO = robotAPI.robot.speak("Can you dance with me? miss?"); //因為這句要先講
+                                            robotAPI.robot.setExpression(RobotFace.SHY);
+                                            iCurrentSpeakSerialNO = robotAPI.robot.speak(getResources().getString(R.string.DA_wm)); //因為這句要先講
                                             break;
                                         case 2:
                                             uploadOKState();
@@ -261,7 +261,7 @@ public class DanceActivity extends RobotActivity {
 
                                         case 6:
                                             robotAPI.robot.setExpression(RobotFace.IMPATIENT);
-                                           iCurrentMoveSerial = robotAPI.robot.speak("Hey! Where are you going? Don't leave me alone");
+                                           iCurrentMoveSerial = robotAPI.robot.speak(getResources().getString(R.string.DA_where));
                                             break;
                                         case 7:
                                             uploadOKState();
@@ -329,7 +329,7 @@ public class DanceActivity extends RobotActivity {
                                             break;
                                         case 21:
                                             robotAPI.robot.setExpression(RobotFace.SHY);
-                                            iCurrentMoveSerial = robotAPI.robot.speak("Wow! It's Fantastic!");
+                                            iCurrentMoveSerial = robotAPI.robot.speak(getResources().getString(R.string.DA_fantastic));
                                             break;
                                         case 22:
                                             uploadOKState();
@@ -341,7 +341,7 @@ public class DanceActivity extends RobotActivity {
                                             musicStop();
                                             //robotAPI.robot.setExpression(RobotFace.HAPPY);
                                             robotAPI.utility.playEmotionalAction(RobotFace.HAPPY, 2);
-                                            iCurrentSpeakSerialNO = robotAPI.robot.speak("Thank you! YO!");
+                                            iCurrentSpeakSerialNO = robotAPI.robot.speak(getResources().getString(R.string.DA_thanks));
                                             break;
                                         case 25:
 
@@ -411,7 +411,7 @@ public class DanceActivity extends RobotActivity {
                                             break;
                                         case 2:
                                             Log.d("two", "two");
-                                            iCurrentSpeakSerialNO = robotAPI.robot.speak("Sure! Let's Dance!", new SpeakConfig().pitch(120)); //因為這句要先講
+                                            iCurrentSpeakSerialNO = robotAPI.robot.speak(getResources().getString(R.string.DA_sure), new SpeakConfig().pitch(120)); //因為這句要先講
                                             break;
                                         //////////////以上動作是完整一組//以上動作是完整一組//以上動作是完整一組//////////////
                                         case 3:
@@ -434,11 +434,11 @@ public class DanceActivity extends RobotActivity {
                                             iCurrentMoveSerial = robotAPI.motion.moveBody(1f, 0f, 0f);
                                             break;
                                         case 6:
-                                           uploadOKState();
+                                            uploadOKState();
                                             break;
                                         case 7:
                                             robotAPI.robot.setExpression(RobotFace.SHOCKED);
-                                            robotAPI.robot.speak("OH! I'm so Sorry!",new SpeakConfig().pitch(170));
+                                            robotAPI.robot.speak(getResources().getString(R.string.DA_sorry),new SpeakConfig().pitch(170));
                                             robotAPI.motion.moveBody(0f, 0f, 3.14f);
                                             iCurrentMoveSerial =robotAPI.motion.moveBody(1f, 0f, 0f);
                                             break;
@@ -447,7 +447,7 @@ public class DanceActivity extends RobotActivity {
                                         //////////////以上動作是完整一組//以上動作是完整一組//以上動作是完整一組//////////////
 
                                         case 8:
-                                            robotAPI.robot.setExpression(RobotFace.AWARE_LEFT);
+                                            robotAPI.robot.setExpression(RobotFace.HAPPY);
                                             robotAPI.motion.moveBody(0f, 0f, 0.785f);
                                             iCurrentMoveSerial = robotAPI.motion.moveBody(1f, 0f, 0f);
                                             break;
@@ -469,7 +469,7 @@ public class DanceActivity extends RobotActivity {
                                             iCurrentMoveSerial = robotAPI.motion.moveBody(0f, 0f, -0.785f);
                                         //////////////以上動作是完整一組//以上動作是完整一組//以上動作是完整一組//////////////
                                         case 13:
-                                            robotAPI.robot.setExpression(RobotFace.INNOCENT);
+                                            robotAPI.robot.setExpression(RobotFace.CONFIDENT);
                                             robotAPI.motion.moveBody(0f, 0f, 1.57f);
                                             iCurrentMoveSerial = robotAPI.motion.moveBody(-0.1f, 0f, 0f);
                                             Log.d("check123", "5");
@@ -498,7 +498,7 @@ public class DanceActivity extends RobotActivity {
                                         case 18:
                                             //變顏色
                                             robotAPI.robot.setExpression(RobotFace.PROUD);
-                                            iCurrentMoveSerial = robotAPI.robot.speak("It's my solo time!", new SpeakConfig().pitch(120));
+                                            iCurrentMoveSerial = robotAPI.robot.speak(getResources().getString(R.string.DA_solo), new SpeakConfig().pitch(120));
                                             break;
                                         case 19:
                                             robotAPI.motion.moveBody(0f, 0f, -1.57f);//順
@@ -526,7 +526,7 @@ public class DanceActivity extends RobotActivity {
                                             //uploadOKState();
                                             Log.d("check123", "10");
                                             robotAPI.utility.playEmotionalAction(RobotFace.ACTIVE, 2);
-                                            iCurrentSpeakSerialNO = robotAPI.robot.speak("Thank you! YEAH!", new SpeakConfig().pitch(120));
+                                            iCurrentSpeakSerialNO = robotAPI.robot.speak(getResources().getString(R.string.DA_thank), new SpeakConfig().pitch(120));
                                             break;
                                         case 25:
                                             uploadOKState();

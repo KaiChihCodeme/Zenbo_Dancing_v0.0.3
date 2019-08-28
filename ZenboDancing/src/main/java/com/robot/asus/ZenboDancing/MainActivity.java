@@ -115,6 +115,6 @@ public class MainActivity extends RobotActivity {
     protected void onResume() {
         super.onResume();
         robotAPI.robot.setExpression(RobotFace.HIDEFACE);
-        robotAPI.robot.speak("I will dance with another zenbo! Could you tell me who am I?");
+        robotAPI.robot.speak(getResources().getString(R.string.MA_who));
     }
 }
