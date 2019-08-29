@@ -12,6 +12,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.asus.robotframework.API.MotionControl;
@@ -144,8 +145,16 @@ public class DanceActivity extends RobotActivity {
         Intent intent = getIntent();
         gender = intent.getStringExtra("motion");
 
-        genderTextView = (TextView) findViewById(R.id.genderTextView);
-        genderTextView.setText(gender);
+        /*genderTextView = (TextView) findViewById(R.id.genderTextView);
+        genderTextView.setText(gender);*/
+
+        LinearLayout linearLayout = findViewById(R.id.LinearLayout1);
+
+        if (gender.equals("man")) {
+            linearLayout.setBackgroundColor(getResources().getColor(R.color.man));
+        } else {
+            linearLayout.setBackgroundColor(getResources().getColor(R.color.girl));
+        }
 
         start = (TextView) findViewById(R.id.start);
         start.setOnClickListener(new View.OnClickListener() {
