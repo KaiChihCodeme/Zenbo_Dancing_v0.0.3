@@ -157,6 +157,13 @@ public class DanceActivity extends RobotActivity {
         }
 
         start = (TextView) findViewById(R.id.start);
+        //改成女生一進來就會Ready，男生按開始就好
+        if (gender.equals("lady") && !isDancing) {
+            downloadforLadyData();
+            start.setText("Ready");
+        }
+
+
         start.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -170,9 +177,9 @@ public class DanceActivity extends RobotActivity {
                     /** ------------------------------------------------------------------------------------------------ */
 
                     musicPlay();
-                } else if (gender.equals("lady") && !isDancing) {
+                } /*else if (gender.equals("lady") && !isDancing) {
                     downloadforLadyData(); // download both state and motion number
-                }
+                }*/
 
                 isDancing = true;
             }
