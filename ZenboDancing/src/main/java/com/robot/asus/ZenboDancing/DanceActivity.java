@@ -163,7 +163,6 @@ public class DanceActivity extends RobotActivity {
             start.setText("Ready");
         }
 
-
         start.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -193,7 +192,13 @@ public class DanceActivity extends RobotActivity {
         super.onResume();
         robotAPI.robot.setExpression(RobotFace.HIDEFACE);
 
-
+        //Initial the database
+        if (gender.equals("man")) {
+            //Initialize the database
+            docRef.update("motion", 0);
+            docRef.update("state_man", 1);
+            docRef.update("state_lady", 1);
+        }
         remoteControl();
 
     }
