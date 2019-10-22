@@ -192,9 +192,13 @@ public class DanceActivity extends RobotActivity {
         super.onResume();
         robotAPI.robot.setExpression(RobotFace.HIDEFACE);
 
+        isDancing = false;
+
         //Initial the database
         if (gender.equals("man")) {
             //Initialize the database
+
+
             docRef.update("motion", 0);
             docRef.update("state_man", 1);
             docRef.update("state_lady", 1);
@@ -215,6 +219,13 @@ public class DanceActivity extends RobotActivity {
         super.onPause();
         music_cha.stop();
 
+    }
+
+    @Override
+    protected void onDestroy(){
+        super.onDestroy();
+
+        isDancing = false;
     }
 
 
@@ -656,7 +667,11 @@ public class DanceActivity extends RobotActivity {
                         }
                     }
                 });
-                handler.postDelayed(this, 100);
+                if(isDancing){
+                    Log.d("testY","123");
+                    handler.postDelayed(this, 100);
+                }
+
             }
         });
         //firebase
